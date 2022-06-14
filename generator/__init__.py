@@ -1,0 +1,1 @@
+from .words_generator import WordsGenerator
