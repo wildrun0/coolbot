@@ -12,6 +12,8 @@ class WordsGenerator():
         self.dirName = "peerstext"
         
         def read_phrases(self):
+            if not os.path.isdir(self.dirName):
+                os.mkdir(self.dirName)
             for i in os.listdir(self.dirName):
                 file_name, _ = i.split('.')
                 if file_name.isdigit():
