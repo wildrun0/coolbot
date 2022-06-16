@@ -1,5 +1,5 @@
 import random
-import logging
+import logging, traceback
 from vkbottle.bot import Message
 from vkbottle.dispatch.rules.base import ChatActionRule
 from loader import bot
@@ -27,14 +27,8 @@ async def bot_invite(event: Message) -> None:
             (только администраторы, боту необх. права администратора)
         """)
         await bot.state_dispenser.set(event.peer_id, SuperStates.NOT_ABLE_TALK)
-        await generator.write_file(event.peer_id, "")   # чтобы бот запомнил, что его пригласили в беседу
-
-  
-@bot.on.chat_message(state=SuperStates.NOT_ABLE_TALK)
-async def switch_to_able(event: Message) -> None:   # если в какой-то беседе набралось нужное кол-во сообщений для словаря бота
-    if len(generator.words_array[event.peer_id]) >= MINIMUM_WORDS:
-        await bot.state_dispenser.set(event.peer_id, SuperStates.ABLE_TALK)
-        logging.info(f"peer({event.peer_id}) state switched from NOT_ABLE_TALK to ABLE_TALK")
+        await generator.write_file(event.peer_id, "")
+        logging.info(f"bot invited in {event.peer_id}")
 
 
 @bot.on.chat_message(text_lowered=phrase, state=SuperStates.ABLE_TALK)
@@ -65,4 +59,7 @@ async def cool_events(event: Message) -> None:
         logging.info(f"peer({event.peer_id}) used cool_rand_talk")
     if event.text.lower() != phrase:                                            # попутно сохраняем все сообщения из беседы
         await generator.write_file(event.peer_id, event.text)
-        logging.debug(f"peer({event.peer_id}) phrase written")
+        logging.info(f"peer({event.peer_id}) phrase written")
+    if event.state_peer.state == "SuperStates:1" and len(generator.words_array[event.peer_id]) >= MINIMUM_WORDS:
+        await bot.state_dispenser.set(event.peer_id, SuperStates.ABLE_TALK)
+        logging.info(f"peer({event.peer_id}) state switched from NOT_ABLE_TALK to ABLE_TALK")
