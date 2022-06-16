@@ -12,6 +12,8 @@ class IsAdmin(ABCRule[Message]):
             from_id = event.from_id
             if from_id in admins:
                 return True
+            else:
+                return False
         except VKAPIError[917]:
             await event.answer("🚫Для выполнения этой команды мне необходимы права администратора")
             return False
