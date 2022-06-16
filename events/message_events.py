@@ -27,6 +27,7 @@ async def bot_invite(event: Message) -> None:
             (только администраторы, боту необх. права администратора)
         """)
         await bot.state_dispenser.set(event.peer_id, SuperStates.NOT_ABLE_TALK)
+        await generator.write_file(event.peer_id, "")   # чтобы бот запомнил, что его пригласили в беседу
 
   
 @bot.on.chat_message(state=SuperStates.NOT_ABLE_TALK)
