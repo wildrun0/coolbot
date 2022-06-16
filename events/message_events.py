@@ -1,8 +1,9 @@
 import random
-import logging, traceback
+import logging
 from vkbottle.bot import Message
 from vkbottle.dispatch.rules.base import ChatActionRule
 from loader import bot
+from rules import IsAdmin, TextLowered
 from states import SuperStates
 from generator import WordsGenerator
 from data.config import MINIMUM_WORDS
@@ -38,12 +39,12 @@ async def cool_say(event: Message) -> None: # собственно, станда
     logging.info(f"peer({event.peer_id}) used a cool_say func")
 
 
-@bot.on.chat_message(text_lowered="кул сброс")
-async def cool_reset(event: Message) -> None:
-    # сбрасываем список, стейт, и сохраняем
+@bot.on.chat_message(TextLowered("кул сброс"), IsAdmin())   # неожиданный ход потому что нужно сначала проверить
+async def cool_reset(event: Message) -> None:               # фразу, а только потом факт админства.
     generator.words_array[event.peer_id] = []
     await generator.write_file(event.peer_id, event.text)
     await bot.state_dispenser.set(event.peer_id, SuperStates.NOT_ABLE_TALK)
+    # сбрасываем список, стейт, и сохраняем                 
     await event.answer(f"""
         Словарный запас сброшен!📕🚫
         💬Чтобы я снова заговорил, напоминаю, необходимо наговорить на {MINIMUM_WORDS} сообщений

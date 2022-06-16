@@ -5,8 +5,8 @@ import logging
 
 FORMAT = '%(asctime)s [coolbot] %(message)s'
 
-bot = Bot(BOT_TOKEN)
-BotConfig(bot)
+bot = Bot(token=BOT_TOKEN)
+BotConfig(bot).init()
 
 logging.basicConfig(encoding='utf-8', level=logging.INFO, format=FORMAT, handlers=[
     logging.FileHandler("coolbot.log"),

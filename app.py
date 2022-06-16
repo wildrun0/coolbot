@@ -1,4 +1,3 @@
-from vkbottle import Bot
 from loader import bot
 import events
 

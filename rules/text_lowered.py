@@ -1,5 +1,5 @@
-from vkbottle.bot import Message
 from vkbottle.dispatch.rules import ABCRule
+from vkbottle.bot import Message
 
 class TextLowered(ABCRule[Message]):
     def __init__(self, lt: str):
