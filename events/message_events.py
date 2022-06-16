@@ -16,21 +16,21 @@ phrase = 'кул говори'   # фраза на которую реагиру
 async def bot_invite(event: Message) -> None:
     action = event.action
     group_id = event.group_id
-    if not action or not group_id:  # проверяем, это нас пригласили или нет
+    if not action or not group_id:
         return
-    await bot.state_dispenser.set(event.peer_id, SuperStates.NOT_ABLE_TALK)
-    if action.member_id == -group_id:
+    if action.member_id == -group_id:   # проверяем, это нас пригласили или нет
         await event.answer(f"""
             👋Здравствуйте!
             Для работы мне нужно выдать доступ к переписке 📧
-            Начну говорить когда наговорите {MINIMUM_WORDS} слов
+            Начну говорить когда наговорите {MINIMUM_WORDS} сообщений
             🪛Для сброса словарного запаса в беседе используйте команду "кул сброс" 
             (только администраторы, боту необх. права администратора)
         """)
+        await bot.state_dispenser.set(event.peer_id, SuperStates.NOT_ABLE_TALK)
 
   
 @bot.on.chat_message(state=SuperStates.NOT_ABLE_TALK)
-async def switch_to_able(event: Message) -> None:   # если в какой-то беседе набралось нужное кол-во слов для словаря бота
+async def switch_to_able(event: Message) -> None:   # если в какой-то беседе набралось нужное кол-во сообщений для словаря бота
     if len(generator.words_array[event.peer_id]) >= MINIMUM_WORDS:
         await bot.state_dispenser.set(event.peer_id, SuperStates.ABLE_TALK)
         logging.info(f"peer({event.peer_id}) state switched from NOT_ABLE_TALK to ABLE_TALK")
@@ -51,7 +51,7 @@ async def cool_reset(event: Message) -> None:
     await bot.state_dispenser.set(event.peer_id, SuperStates.NOT_ABLE_TALK)
     await event.answer(f"""
         Словарный запас сброшен!📕🚫
-        💬Чтобы я снова заговорил, напоминаю, необходимо наговорить на {MINIMUM_WORDS} сообщений.
+        💬Чтобы я снова заговорил, напоминаю, необходимо наговорить на {MINIMUM_WORDS} сообщений
     """)
     logging.info(f"peer({event.peer_id}) used cool_reset")
 
@@ -62,6 +62,6 @@ async def cool_events(event: Message) -> None:
         generated_text = await generator.generate_message(event.peer_id)
         await event.answer(generated_text)
         logging.info(f"peer({event.peer_id}) used cool_rand_talk")
-    if event.text.lower() != phrase:                                            # попутно сохраняем все слова/предложения из беседы
+    if event.text.lower() != phrase:                                            # попутно сохраняем все сообщения из беседы
         await generator.write_file(event.peer_id, event.text)
         logging.debug(f"peer({event.peer_id}) phrase written")

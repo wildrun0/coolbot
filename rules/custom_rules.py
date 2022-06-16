@@ -9,4 +9,3 @@ class TextLowered(ABCRule[Message]):
     # так удобнее проверять команды, чтобы не запариваться с регистрами
     async def check(self, event: Message) -> bool:
         return event.text.lower() == self.lt
-    

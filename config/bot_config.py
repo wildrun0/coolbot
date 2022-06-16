@@ -4,7 +4,7 @@ from generator import WordsGenerator
 from data.config import MINIMUM_WORDS
 
 class BotConfig():
-    async def states_init(self):                                            # инициализируем при старте бота нужный стейт у бесед
+    async def states_init(self) -> None:                                    # инициализируем при старте бота нужный стейт у бесед
         for peer_id, peer_messages in WordsGenerator().words_array.items(): # в которых бот уже может говорить, это нужно чтобы 
             if len(peer_messages) >= MINIMUM_WORDS:                         # при запуске не возникало проблем с отсуствием стейта
                 await self.bot.state_dispenser.set(peer_id, SuperStates.ABLE_TALK)
