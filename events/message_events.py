@@ -60,7 +60,7 @@ async def cool_events(event: Message) -> None:
         logging.info(f"peer({event.peer_id}) used cool_rand_talk")
     if event.text.lower() != phrase:                                            # попутно сохраняем все сообщения из беседы
         await generator.write_file(event.peer_id, event.text)
-        logging.info(f"peer({event.peer_id}) phrase written")
+        logging.DEBUG(f"peer({event.peer_id}) phrase written")
     if event.state_peer.state == "SuperStates:1" and len(generator.words_array[event.peer_id]) >= MINIMUM_WORDS:
         await bot.state_dispenser.set(event.peer_id, SuperStates.ABLE_TALK)
         logging.info(f"peer({event.peer_id}) state switched from NOT_ABLE_TALK to ABLE_TALK")
