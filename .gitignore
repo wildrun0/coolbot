@@ -1,5 +1,6 @@
 **/__pycache__/
 peerstext/*
 *.log
+.venv/*
 .env
 .DS_Store
